@@ -2,7 +2,7 @@
 
 <p align="center">A Simple Wordpress Plugin to allow users to easily add Rumble Videos via Shortcode<br>
 	<a href="https://matrixwebdesigners.com/wordpress/rumbe-video-wordpress-shortcode-plugin/">
-		<img src="https://matrixwebdesigners.com/updates/plugins/rumble-shortcode/rumbleShortcodeBanner-772x250" width="100%" alt="Rumble Shortcode for WordPress">
+		<img src="https://matrixwebdesigners.com/updates/plugins/rumble-shortcode/rumbleShortcodeBanner-772x250.png" width="100%" alt="Rumble Shortcode for WordPress">
 	</a>
 </p>
 
