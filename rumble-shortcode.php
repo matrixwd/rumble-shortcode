@@ -23,10 +23,6 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-Created by: Jack Mullen 2/2021
-Converted to a simple plugin by: Eric Murphy 11-18-2021
-This is used to convert different currencies to dollars
-Accross the MPN Platforms
 */
 
 if (!defined('ABSPATH')) die('No direct access allowed');
@@ -45,15 +41,21 @@ if ( ! function_exists( 'rumble_video_control' ) ) {
 			'width' 	=> ''
 		), $atts);
 		
-		$url = $src_url['url'];
+		$url = $src_url['url']; 
 		//$url="https://rumble.com/embed/vlhru1/?pub=4";
 
 		$urlmatch = array();
                 
-		$htmlString = file_get_contents($url);
+		$htmlString = wp_remote_retrieve_body( wp_remote_get($url) ); // no need to escape entities, esc url below
+		
+		if ( ! is_wp_error( $htmlString ) ) {
+			echo wp_remote_retrieve_body( $htmlString );
+		}
+		
 		#$reg='#\{\"mp4\"\:\{\"url\"\:\"(https\:.*?\")#';
 		#for video tag 
 		#$reg='#\<video.*?(src\=\".*?\".*?(poster\=".*?\"))#';
+		
 		$reg ='#\{\"mp4\"\:\{\"url\"\:\"(https\:.*?)\".*?\"i\"\:\"(https\:.*\.jpg)\"#';
 		preg_match($reg,$htmlString,$urlmatch);
 
@@ -67,34 +69,34 @@ if ( ! function_exists( 'rumble_video_control' ) ) {
 
 			if($src_url['poster'] === 'true' || $src_url['poster'] == 1 ){ // if this is set to true then we dont look for one uploaded
 				$poster_img = (string)$urlmatch[2];
-				$poster = esc_url( $poster_img );
+				$poster = esc_url( $poster_img ); // esc the url
 			}else if( !empty($src_url['overlay']) && isset($src_url['overlay']) ){
 				$poster_img = $src_url['overlay'];
-				$poster = esc_url( $poster_img );
+				$poster = esc_url( $poster_img ); // esc the url
 			}else{
-				$poster = '';
+				$poster = ''; // nothing is set
 			}
 			
 			if( !empty($src_url['height']) && isset($src_url['height']) ) {
-				$height = 'height: ' . $src_url['height'] . ';';
+				$height = 'height: ' . sanitize_text_field($src_url['height']) . ';'; // sanitize height
 			}else{
-				$height = 'height: 0;';
+				$height = 'height: 0;'; // if none we insert it
 			}
 			
 			if( !empty($src_url['width']) && isset($src_url['width']) ) {
-				$width = 'width: ' . $src_url['width'] . ';';
+				$width = 'width: ' . sanitize_text_field($src_url['width']) . ';'; // sanitize width
 			}else{
-				$width = 'width: 100%;';
+				$width = 'width: 100%;'; // if none we insert it
 			}
 			
-			$output = '<div style="position: relative; padding-bottom: calc(var(--aspect-ratio, .5625) * 100%); ' . $height . ' ' . $width . ' margin: 0 auto;" class="rumble-video-container"><video controls controlsList="nodownload" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;" preload="metadata" src="' . $vid_source . '" poster="' . $poster . '"></video></div>';
+			$output = '<div style="position: relative; padding-bottom: calc(var(--aspect-ratio, .5625) * 100%); ' . esc_attr($height) . ' ' . esc_attr($width) . ' margin: 0 auto;" class="rumble-video-container"><video controls controlsList="nodownload" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000;" preload="metadata" src="' . esc_url($vid_source) . '" poster="' . esc_url($poster) . '"></video></div>';
 			
 		}else{
-			$output = '<p><b>Error</b> - ' . $url . ' is not an embed code. Be sure you entered the Rumble EMBED code. If <b>poster="false"</b> or <b>"0"</b> please enter full url to image overlay starting with http(s) unless image is self hosted, then it can be a relative url.</p>'; 
+			$output = '<p><b>Error</b> - ' . esc_url($url) . ' is not an embed code. Be sure you entered the Rumble EMBED code. If <b>poster="false"</b> or <b>"0"</b> please enter full url to image overlay starting with http(s) unless image is self hosted, then it can be a relative url.</p>'; 
 			return $output;
 		}
 		
-		echo $output;
+		return $output;
 	}
 }
 
