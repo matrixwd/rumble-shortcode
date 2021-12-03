@@ -1,4 +1,4 @@
-=== Hide Categories On Shop Page ===
+=== Rumble Video Shortcode ===
 Contributors: WMEric
 Donate link: https://www.paypal.me/matrixwd
 Tags: Wordpress, Rumble, Video Embed
@@ -36,14 +36,12 @@ And thank you in advance :)
  
 == Screenshots ==
  
-1. New "Hide Categories on Shop Page" link under Product tab
-2. Before Plugin
-3. After Plugin
- 
+1. Shortcode output on frontend of site
+2. Shortcode writing example. 
 
 == Changelog ==
 
-= 1.0 =
+= 1.0.0 =
 * Stable initial release
 
 == Upgrade Notice ==
